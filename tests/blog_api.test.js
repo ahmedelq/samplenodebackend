@@ -20,10 +20,10 @@ describe('API test', () => {
     test('Testing the id object exists', async () => {
         const response = await api.get('/api/blogs');
         response.body.map(r => { 
-            r.id.toBeDefined();
-            r._id.not.toBeDefined();
-            r.__v.not.toBeDefined();
-        });
+            expect(r.id).toBeDefined();
+            expect(r._id).not.toBeDefined();
+            expect(r.__v).not.toBeDefined();
+         });
     }); 
     test('POST REQ.', async () => {
         const newBlogEntry = {
@@ -35,10 +35,35 @@ describe('API test', () => {
         await api
                 .post('/api/blogs')
                 .send(newBlogEntry)
-            .except(200)
-            .except('Content-Type', /application\/json/);
-        
+            .expect(201)
+       const response = await api.get('/api/blogs');
+       expect(response.body).toHaveLength(initBlogs.length + 1); 
     });
+
+    test('LIKE PROPERTY DEFAULTS TO 0', async () => {
+        const newBlogEntry = {
+            title: 'Another one',
+            author: 'Abu Ahmad',
+            url: 'https://'
+        }
+        await api
+                .post('/api/blogs')
+                .send(newBlogEntry)
+            .expect(201)
+       const response = await api.get('/api/blogs');
+       expect(response.body.pop().likes).toBe(0);
+    });
+    test('ENSURE TITLE & URL', async () => {
+        const newBlogEntry = {
+            author: 'Abu Mohammed'
+        }
+        await api
+                .post('/api/blogs')
+                .send(newBlogEntry)
+            .expect(400)
+    });
+
+
 });
 
 afterAll(()=> mongoose.connection.close());
