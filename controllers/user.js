@@ -4,7 +4,6 @@ const User = require('../models/user.js');
 
 userRouter.post('/', async (req, res, nxt) => {
   const passwd = await bcrypt.hash(req.body.password, 10);
-  console.log(req.body);
   new User({ ...req.body, passwdHashed: passwd })
     .save()
     .then((result) => res.status(200).json(result))
