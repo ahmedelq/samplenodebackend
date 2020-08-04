@@ -23,6 +23,7 @@ const errHandler = (err, req, res, nxt) => {
     res.status(400).json({ error: 'invalid input' });
   } else if (err.name === 'JsonWebTokenError') {
     res.status(400).json({ error: 'invalid token' });
+    console.log('Invalid token');
   } else {
     console.log(err);
     res.status(500).end();

@@ -16,6 +16,7 @@ blogRouter.post('/', async (request, response, nxt) => {
   if (!token) response.status(401).json({ error: 'not allowed' });
   const user = await User.findById(token.id);
   const blog = new Blog({ ...request.body, user: user._id });
+  console.log(blog);
   const savedBlog = await blog.save();
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
