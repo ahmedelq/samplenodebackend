@@ -8,11 +8,18 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const update = obj => axios.put(`${baseUrl}/${obj.id}`, obj)
+
 const insert = (obj) =>{ 
   const config  = {
     headers: {Authorization: token}
   }
-  console.log(config)
   return axios.post(baseUrl, obj, config)
 }
-export default { insert, setToken, getAll }
+const remove = (blogId) => {
+  const config  = {
+    headers: {Authorization: token}
+  }
+  return axios.delete(`${baseUrl}/${blogId}`, config)
+}
+export default { remove, update, insert, setToken, getAll }

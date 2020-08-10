@@ -10,7 +10,30 @@ const App = () => {
   const [user, setUser] = useState({});
   const [not, setNot] = useState('');
   const [vBlogs, setVBlogs] = useState({});
-
+  const doRemove = blogId => {
+    if (!window.confirm(`Remove blog?`))
+        return;
+    blogService
+      .remove(blogId)
+      .then(res => {
+      const newBlogs = blogs.filter(blog => blog.id !== blogId)
+        setBlogs(newBlogs)
+        setNot("Blog removed")
+      })
+      .catch(err => console.log(err.response))
+  }
+  const doLike = blogId => {
+    const blg_i = blogs.findIndex(blg => blg.id === blogId)
+    const blg = blogs[blg_i]
+    const newBlog = {...blg, likes:blg.likes + 1}
+    const newBlogs = [...blogs]
+    blogService
+      .update(newBlog)
+      .then(res => {
+        newBlogs[blg_i] = newBlog;
+        setBlogs(newBlogs)
+  })
+  }
   const toggleBlog = blogId => 
   { 
     const isVisible = vBlogs[blogId]
@@ -69,19 +92,16 @@ const App = () => {
       }) 
       .catch(err => console.log(err)) 
   }
-
- 
   return (
     <div>
       <h2>blogs</h2>
-      <p>{not}</p>
-      {display()}      
+      <p>{not}</p> {display()}      
       {isUserSet() && 
         <Toggle ref={blogFormRef} outroBtnName="cancel" introBtnName="add new note">
           <BlogForm addBlog={create} />
          </Toggle>} 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={{...blog, isVisible:vBlogs[blog.id]}} toggleBlog={toggleBlog}/>
+      {blogs.sort((b1,b2)=>b2.likes-b1.likes).map(blog =>
+        <Blog userId={user.username} key={blog.id} doRemove={doRemove} doLike={doLike} blog={{...blog, isVisible:vBlogs[blog.id]}} toggleBlog={toggleBlog}/>
       )}
     </div>
   )
