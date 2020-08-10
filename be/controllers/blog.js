@@ -37,7 +37,7 @@ blogRouter.delete('/:id', async (req, res, nxt) => {
 
 blogRouter.put('/:id', (req, res, nxt) => {
   Blog
-    .findByIdAndUpdate(req.params.id, { url: req.body.url }, { new: true })
+    .findByIdAndUpdate(req.params.id, { ...req.body }, { new: true })
     .then((result) => res.status(241).json(result))
     .catch((err) => nxt(err));
 });
