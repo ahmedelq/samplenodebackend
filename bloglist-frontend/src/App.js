@@ -15,10 +15,11 @@ const App = () => {
         return;
     blogService
       .remove(blogId)
-      .then(res => {
+      .then(()  => {
       const newBlogs = blogs.filter(blog => blog.id !== blogId)
         setBlogs(newBlogs)
         setNot("Blog removed")
+        return;
       })
       .catch(err => console.log(err.response))
   }

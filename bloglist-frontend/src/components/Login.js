@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import req from '../services/login.js'
+import PropTypes from 'prop-types'
 
 const Login = ({setUser, setNot}) => { 
   const [username, setUsername] = useState('')
@@ -17,7 +18,7 @@ const Login = ({setUser, setNot}) => {
         setUser(result.data)
 
       })
-      .catch(err => setNot('Invalid credintials') );
+      .catch(() => setNot('Invalid credintials') );
   }
 
 return (<>
@@ -40,4 +41,8 @@ return (<>
   </form>  
   </>)}
 
+Login.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  setNot: PropTypes.func.isRequired
+}
 export default Login;
